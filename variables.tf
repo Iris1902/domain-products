@@ -52,16 +52,19 @@ variable "DB_PASSWORD" {
 
 variable "vpc_id" {
   type        = string
+  default = "vpc-07ed6f622674768b4"
   description = "VPC ID para los recursos"
 }
 
 variable "subnet1" {
   type        = string
+  default = "subnet-0695499f8e7e48f1f"
   description = "ID de la primera subnet"
 }
 
 variable "subnet2" {
   type        = string
+  default = "subnet-05d8f02253a448f99"
   description = "ID de la segunda subnet"
 }
 
