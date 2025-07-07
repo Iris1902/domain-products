@@ -18,10 +18,10 @@ resource "aws_security_group" "sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  # Puertos de microservicios (7000-7003)
+  # Puertos de microservicios (6000-6003)
   ingress {
-    from_port   = 7000
-    to_port     = 7003
+    from_port   = 6000
+    to_port     = 6003
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
@@ -51,18 +51,20 @@ resource "aws_launch_template" "lt" {
   key_name      = aws_key_pair.key.key_name
   vpc_security_group_ids = [aws_security_group.sg.id]
   user_data = base64encode(templatefile("${path.module}/docker-compose.tpl", {
-    image_user_create = "ievinan/microservice-user-create:${var.branch}",
-    port_user_create  = 7000,
-    image_user_read   = "ievinan/microservice-user-read:${var.branch}",
-    port_user_read    = 7001,
-    image_user_update = "ievinan/microservice-user-update:${var.branch}",
-    port_user_update  = 7002,
-    image_user_delete = "ievinan/microservice-user-delete:${var.branch}",
-    port_user_delete  = 7003,
-    db_kind     = var.db_kind,
-    jdbc_url    = var.jdbc_url,
-    db_username = var.db_username,
-    db_password = var.db_password
+    image_user_create = "ievinan/microservice-product-create:${var.branch}",
+    port_user_create  = 6000,
+    image_user_read   = "ievinan/microservice-product-read:${var.branch}",
+    port_user_read    = 6001,
+    image_user_update = "ievinan/microservice-product-update:${var.branch}",
+    port_user_update  = 6002,
+    image_user_delete = "ievinan/microservice-product-delete:${var.branch}",
+    port_user_delete  = 6003,
+    db_connection = var.db_connection,
+    db_host       = var.db_host,
+    db_port       = var.db_port,
+    db_database   = var.db_database,
+    db_username   = var.db_username,
+    db_password   = var.db_password
   }))
 }
 
@@ -76,11 +78,11 @@ resource "aws_lb" "alb" {
 
 resource "aws_lb_target_group" "tg_create" {
   name     = "${var.name}-tg-create"
-  port     = 7000
+  port     = 6000
   protocol = "HTTP"
   vpc_id   = var.vpc_id
   health_check {
-    path                = "/api/users-create/health"
+    path                = "/api/products-create/health"
     interval            = 30
     timeout             = 5
     healthy_threshold   = 2
@@ -91,11 +93,11 @@ resource "aws_lb_target_group" "tg_create" {
 
 resource "aws_lb_target_group" "tg_read" {
   name     = "${var.name}-tg-read"
-  port     = 7001
+  port     = 6001
   protocol = "HTTP"
   vpc_id   = var.vpc_id
   health_check {
-    path                = "/api/users-read/health"
+    path                = "/api/products-read/health"
     interval            = 30
     timeout             = 5
     healthy_threshold   = 2
@@ -106,11 +108,11 @@ resource "aws_lb_target_group" "tg_read" {
 
 resource "aws_lb_target_group" "tg_update" {
   name     = "${var.name}-tg-update"
-  port     = 7002
+  port     = 6002
   protocol = "HTTP"
   vpc_id   = var.vpc_id
   health_check {
-    path                = "/api/users-update/health"
+    path                = "/api/products-update/health"
     interval            = 30
     timeout             = 5
     healthy_threshold   = 2
@@ -121,11 +123,11 @@ resource "aws_lb_target_group" "tg_update" {
 
 resource "aws_lb_target_group" "tg_delete" {
   name     = "${var.name}-tg-delete"
-  port     = 7003
+  port     = 6003
   protocol = "HTTP"
   vpc_id   = var.vpc_id
   health_check {
-    path                = "/api/users-delete/health"
+    path                = "/api/products-delete/health"
     interval            = 30
     timeout             = 5
     healthy_threshold   = 2
@@ -149,7 +151,7 @@ resource "aws_lb_listener_rule" "rule_create" {
   priority     = 100
   condition {
     path_pattern {
-      values = ["/api/users-create*"]
+      values = ["/api/products-create*"]
     }
   }
   action {
@@ -163,7 +165,7 @@ resource "aws_lb_listener_rule" "rule_read" {
   priority     = 101
   condition {
     path_pattern {
-      values = ["/api/users-read*"]
+      values = ["/api/products-read*"]
     }
   }
   action {
@@ -177,7 +179,7 @@ resource "aws_lb_listener_rule" "rule_update" {
   priority     = 102
   condition {
     path_pattern {
-      values = ["/api/users-update*"]
+      values = ["/api/products-update*"]
     }
   }
   action {
@@ -191,7 +193,7 @@ resource "aws_lb_listener_rule" "rule_delete" {
   priority     = 103
   condition {
     path_pattern {
-      values = ["/api/users-delete*"]
+      values = ["/api/products-delete*"]
     }
   }
   action {

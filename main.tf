@@ -5,23 +5,26 @@ provider "aws" {
   token      = var.AWS_SESSION_TOKEN
 }
 
-module "domain_users" {
+module "domain_products" {
   source = "./modules/microservice"
-  name   = "domain-users"
-  image_user_create = "ievinan/microservice-user-create"
-  port_user_create  = 7000
-  image_user_read   = "ievinan/microservice-user-read"
-  port_user_read    = 7001
-  image_user_update = "ievinan/microservice-user-update"
-  port_user_update  = 7002
-  image_user_delete = "ievinan/microservice-user-delete"
-  port_user_delete  = 7003
-  branch     = var.BRANCH_NAME
-  db_kind    = var.DB_KIND
-  jdbc_url   = var.JDBC_URL
-  db_username= var.DB_USERNAME
-  db_password= var.DB_PASSWORD
+  name   = "domain-products"
+  image_user_create = "ievinan/microservice-product-create"
+  port_user_create  = 6000
+  image_user_read   = "ievinan/microservice-product-read"
+  port_user_read    = 6001
+  image_user_update = "ievinan/microservice-product-update"
+  port_user_update  = 6002
+  image_user_delete = "ievinan/microservice-product-delete"
+  port_user_delete  = 6003
+  branch        = var.BRANCH_NAME
+  db_connection = var.DB_CONNECTION
+  db_host       = var.DB_HOST
+  db_port       = var.DB_PORT
+  db_database   = var.DB_DATABASE
+  db_username   = var.DB_USERNAME
+  db_password   = var.DB_PASSWORD
 }
+
 
 resource "aws_sns_topic" "asg_alerts" {
   name = "asg-alerts-topic"
@@ -44,7 +47,7 @@ resource "aws_cloudwatch_metric_alarm" "asg_high_cpu" {
   threshold           = 70
   alarm_description   = "Alarma si el promedio de CPU de las instancias del ASG supera el 70%"
   dimensions = {
-    AutoScalingGroupName = module.domain_users.asg_name
+    AutoScalingGroupName = module.domain_products.asg_name
   }
   alarm_actions = [aws_sns_topic.asg_alerts.arn]
 }
@@ -61,7 +64,7 @@ resource "aws_cloudwatch_dashboard" "asg_dashboard" {
         "height" = 6,
         "properties" = {
           "metrics" = [
-            [ "AWS/EC2", "CPUUtilization", "AutoScalingGroupName", module.domain_users.asg_name ]
+            [ "AWS/EC2", "CPUUtilization", "AutoScalingGroupName", module.domain_products.asg_name ]
           ],
           "period" = 300,
           "stat" = "Average",

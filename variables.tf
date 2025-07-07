@@ -20,14 +20,24 @@ variable "BRANCH_NAME" {
   default = "dev"
 }
 
-variable "DB_KIND" {
+variable "DB_CONNECTION" {
   type        = string
-  description = "Tipo de base de datos"
+  description = "Tipo de conexión de la base de datos"
 }
 
-variable "JDBC_URL" {
+variable "DB_HOST" {
   type        = string
-  description = "JDBC URL de la base de datos"
+  description = "Host de la base de datos"
+}
+
+variable "DB_PORT" {
+  type        = string
+  description = "Puerto de la base de datos"
+}
+
+variable "DB_DATABASE" {
+  type        = string
+  description = "Nombre de la base de datos"
 }
 
 variable "DB_USERNAME" {

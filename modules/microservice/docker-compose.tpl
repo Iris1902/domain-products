@@ -9,44 +9,52 @@ chmod +x /usr/local/bin/docker-compose
 cat <<EOL > /home/ubuntu/docker-compose.yml
 version: '3'
 services:
-  user-create:
+  product-create:
     image: ${image_user_create}
     ports:
-      - "${port_user_create}:7000"
+      - "${port_user_create}:6000"
     environment:
-      - PORT=7000
-      - DB_KIND=${db_kind}
-      - JDBC_URL=${jdbc_url}
+      - PORT=6000
+      - DB_CONNECTION=${db_connection}
+      - DB_HOST=${db_host}
+      - DB_PORT=${db_port}
+      - DB_DATABASE=${db_database}
       - DB_USERNAME=${db_username}
       - DB_PASSWORD=${db_password}
-  user-read:
+  product-read:
     image: ${image_user_read}
     ports:
-      - "${port_user_read}:7001"
+      - "${port_user_read}:6001"
     environment:
-      - PORT=7001
-      - DB_KIND=${db_kind}
-      - JDBC_URL=${jdbc_url}
+      - PORT=6001
+      - DB_CONNECTION=${db_connection}
+      - DB_HOST=${db_host}
+      - DB_PORT=${db_port}
+      - DB_DATABASE=${db_database}
       - DB_USERNAME=${db_username}
       - DB_PASSWORD=${db_password}
-  user-update:
+  product-update:
     image: ${image_user_update}
     ports:
-      - "${port_user_update}:7002"
+      - "${port_user_update}:6002"
     environment:
-      - PORT=7002
-      - DB_KIND=${db_kind}
-      - JDBC_URL=${jdbc_url}
+      - PORT=6002
+      - DB_CONNECTION=${db_connection}
+      - DB_HOST=${db_host}
+      - DB_PORT=${db_port}
+      - DB_DATABASE=${db_database}
       - DB_USERNAME=${db_username}
       - DB_PASSWORD=${db_password}
-  user-delete:
+  product-delete:
     image: ${image_user_delete}
     ports:
-      - "${port_user_delete}:7003"
+      - "${port_user_delete}:6003"
     environment:
-      - PORT=7003
-      - DB_KIND=${db_kind}
-      - JDBC_URL=${jdbc_url}
+      - PORT=6003
+      - DB_CONNECTION=${db_connection}
+      - DB_HOST=${db_host}
+      - DB_PORT=${db_port}
+      - DB_DATABASE=${db_database}
       - DB_USERNAME=${db_username}
       - DB_PASSWORD=${db_password}
 EOL

@@ -4,42 +4,42 @@ variable "name" {
 }
 
 variable "image_user_create" {
-  description = "Imagen Docker para user-create"
+  description = "Imagen Docker para product-create"
   type        = string
 }
 
 variable "port_user_create" {
-  description = "Puerto para user-create"
+  description = "Puerto para product-create"
   type        = number
 }
 
 variable "image_user_read" {
-  description = "Imagen Docker para user-read"
+  description = "Imagen Docker para product-read"
   type        = string
 }
 
 variable "port_user_read" {
-  description = "Puerto para user-read"
+  description = "Puerto para product-read"
   type        = number
 }
 
 variable "image_user_update" {
-  description = "Imagen Docker para user-update"
+  description = "Imagen Docker para product-update"
   type        = string
 }
 
 variable "port_user_update" {
-  description = "Puerto para user-update"
+  description = "Puerto para product-update"
   type        = number
 }
 
 variable "image_user_delete" {
-  description = "Imagen Docker para user-delete"
+  description = "Imagen Docker para product-delete"
   type        = string
 }
 
 variable "port_user_delete" {
-  description = "Puerto para user-delete"
+  description = "Puerto para product-delete"
   type        = number
 }
 
@@ -63,13 +63,23 @@ variable "ami_id" {
   default = "ami-020cba7c55df1f615"
 }
 
-variable "db_kind" {
-  description = "Tipo de base de datos"
+variable "db_connection" {
+  description = "Tipo de conexión de base de datos"
   type        = string
 }
 
-variable "jdbc_url" {
-  description = "JDBC URL de la base de datos"
+variable "db_host" {
+  description = "Host de la base de datos"
+  type        = string
+}
+
+variable "db_port" {
+  description = "Puerto de la base de datos"
+  type        = string
+}
+
+variable "db_database" {
+  description = "Nombre de la base de datos"
   type        = string
 }
 
