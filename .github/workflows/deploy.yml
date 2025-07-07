@@ -77,7 +77,10 @@ jobs:
             -var="DB_KIND=${{ secrets.DB_KIND }}" \
             -var="JDBC_URL=${{ secrets.JDBC_URL }}" \
             -var="DB_USERNAME=${{ secrets.DB_USERNAME }}" \
-            -var="DB_PASSWORD=${{ secrets.DB_PASSWORD }}"
+            -var="DB_PASSWORD=${{ secrets.DB_PASSWORD }}" \
+            -var="vpc_id=${{ secrets.VPC_ID }}" \
+            -var="subnet1=${{ secrets.SUBNET1 }}" \
+            -var="subnet2=${{ secrets.SUBNET2 }}"
           echo $? > tf_exit_code.txt
       - name: Set refresh flag if needed
         id: set-flag

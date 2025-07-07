@@ -23,6 +23,9 @@ module "domain_products" {
   db_database   = var.DB_DATABASE
   db_username   = var.DB_USERNAME
   db_password   = var.DB_PASSWORD
+  vpc_id     = var.vpc_id
+  subnet1    = var.subnet1
+  subnet2    = var.subnet2
 }
 
 
