@@ -41,12 +41,19 @@ jobs:
       - name: Validate Terraform
         run: terraform validate
 
-      - name: Extraer branch del log
+      - name: Extraer branch del log de triggers de productos
         id: extract-branch
         run: |
-          branch=$(grep -oP 'on branch \K[^ ]+' trigger-microservice-user-create.log | head -1)
-          echo "BRANCH_NAME=$branch" >> $GITHUB_ENV
-          echo "Branch extraído: $branch"
+          for log in trigger-microservice-product-create.log trigger-microservice-product-read.log trigger-microservice-product-update.log trigger-microservice-product-delete.log; do
+            if [ -f "$log" ]; then
+              branch=$(grep -oP 'on branch \K[^ ]+' "$log" | head -1)
+              if [ ! -z "$branch" ]; then
+                echo "BRANCH_NAME=$branch" >> $GITHUB_ENV
+                echo "Branch extraído de $log: $branch"
+                break
+              fi
+            fi
+          done
 
       - name: Format Terraform
         run: terraform fmt -recursive
@@ -59,8 +66,10 @@ jobs:
             -var="AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}" \
             -var="AWS_SESSION_TOKEN=${{ secrets.AWS_SESSION_TOKEN }}" \
             -var="BRANCH_NAME=${{ env.BRANCH_NAME }}" \
-            -var="DB_KIND=${{ secrets.DB_KIND }}" \
-            -var="JDBC_URL=${{ secrets.JDBC_URL }}" \
+            -var="DB_CONNECTION=${{ secrets.DB_CONNECTION }}" \
+            -var="DB_HOST=${{ secrets.DB_HOST }}" \
+            -var="DB_PORT=${{ secrets.DB_PORT }}" \
+            -var="DB_DATABASE=${{ secrets.DB_DATABASE }}" \
             -var="DB_USERNAME=${{ secrets.DB_USERNAME }}" \
             -var="DB_PASSWORD=${{ secrets.DB_PASSWORD }}"
       
@@ -74,8 +83,10 @@ jobs:
             -var="AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}" \
             -var="AWS_SESSION_TOKEN=${{ secrets.AWS_SESSION_TOKEN }}" \
             -var="BRANCH_NAME=${{ env.BRANCH_NAME }}" \
-            -var="DB_KIND=${{ secrets.DB_KIND }}" \
-            -var="JDBC_URL=${{ secrets.JDBC_URL }}" \
+            -var="DB_CONNECTION=${{ secrets.DB_CONNECTION }}" \
+            -var="DB_HOST=${{ secrets.DB_HOST }}" \
+            -var="DB_PORT=${{ secrets.DB_PORT }}" \
+            -var="DB_DATABASE=${{ secrets.DB_DATABASE }}" \
             -var="DB_USERNAME=${{ secrets.DB_USERNAME }}" \
             -var="DB_PASSWORD=${{ secrets.DB_PASSWORD }}"
           echo $? > tf_exit_code.txt
